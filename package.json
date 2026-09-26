@@ -1,0 +1,7 @@
+{
+  "name": "drift-fullstack",
+  "private": true,
+  "scripts": {
+    "build": "npm install --prefix frontend && npm run build --prefix frontend"
+  }
+}

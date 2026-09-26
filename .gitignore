@@ -1,0 +1,28 @@
+# Environment variables
+.env
+**/.env
+
+# Python virtual environments
+.venv/
+venv/
+backend/.venv/
+backend/venv/
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# SQLite databases
+*.db
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Vercel
+.vercel/
+
+# Optional OS/editor files
+.DS_Store
+Thumbs.db
