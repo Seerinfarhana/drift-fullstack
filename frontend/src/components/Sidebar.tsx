@@ -90,12 +90,17 @@ export default function Sidebar({
 
           {/* Only visible on mobile */}
           <button
-            className="mobile-sidebar-close"
-            onClick={onCloseMobile}
-            aria-label="Close sidebar"
-          >
-            ✕
-          </button>
+  type="button"
+  className="mobile-sidebar-close"
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onCloseMobile();
+  }}
+  aria-label="Close sidebar"
+>
+  ✕
+</button>
         </div>
       </div>
 

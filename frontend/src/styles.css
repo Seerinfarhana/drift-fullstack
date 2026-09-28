@@ -248,3 +248,73 @@ textarea.dnotes{width:100%; min-height:70px; font-size:13px; resize:vertical; ma
     font-size: 20px;
   }
 }
+.mobile-sidebar-close {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+
+    width: 250px;
+    height: 100vh;
+
+    z-index: 2000;
+
+    transition: left 0.25s ease;
+  }
+
+  .sidebar.mobile-open {
+    left: 0;
+  }
+
+  .side-top {
+    position: relative;
+  }
+
+  .mobile-sidebar-close {
+    display: flex;
+
+    position: absolute;
+    top: 18px;
+    right: 12px;
+
+    width: 28px;
+    height: 28px;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 2100;
+
+    border: 1px solid var(--border);
+    border-radius: 6px;
+
+    background: var(--surface2);
+    color: var(--text);
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    pointer-events: auto;
+  }
+
+  .mobile-sidebar-close:hover {
+    background: var(--border);
+  }
+
+  .mobile-sidebar-overlay {
+    display: block;
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    z-index: 1500;
+  }
+}
