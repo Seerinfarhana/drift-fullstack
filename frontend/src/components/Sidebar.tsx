@@ -1,18 +1,10 @@
 import { useState } from "react";
-import type {
-  TaskList,
-  ViewId,
-} from "../types";
-
+import type { TaskList, ViewId } from "../types";
 import { useAuth } from "../hooks/useAuth";
-
-import {
-  requestNotificationPermission,
-} from "../utils/notifications";
+import { requestNotificationPermission } from "../utils/notifications";
 
 interface Props {
   lists: TaskList[];
-
   view: ViewId;
 
   counts: {
@@ -23,14 +15,10 @@ interface Props {
   };
 
   onSetView: (view: ViewId) => void;
+  onCreateList: (name: string) => void;
 
-  onCreateList: (
-    name: string
-  ) => void;
-
-  // MOBILE
+  // Mobile sidebar controls
   mobileOpen: boolean;
-
   onCloseMobile: () => void;
 }
 
@@ -43,33 +31,24 @@ export default function Sidebar({
   mobileOpen,
   onCloseMobile,
 }: Props) {
-  const {
-    user,
-    logout,
-  } = useAuth();
+  const { user, logout } = useAuth();
 
-  const [
-    addingList,
-    setAddingList,
-  ] = useState(false);
+  const [addingList, setAddingList] = useState(false);
+  const [newListName, setNewListName] = useState("");
 
-  const [
-    newListName,
-    setNewListName,
-  ] = useState("");
+  const customLists = lists.filter((list) => !list.is_default);
 
-  function changeView(
-    newView: ViewId
-  ) {
+  const defaultList = lists.find((list) => list.is_default);
+
+  function handleViewChange(newView: ViewId) {
     onSetView(newView);
 
-    // Close sidebar automatically on phone
+    // Close sidebar after selecting something on mobile
     onCloseMobile();
   }
 
   function commitNewList() {
-    const name =
-      newListName.trim();
+    const name = newListName.trim();
 
     if (name) {
       onCreateList(name);
@@ -80,45 +59,22 @@ export default function Sidebar({
   }
 
   async function enableNotifications() {
-    const enabled =
-      await requestNotificationPermission();
+    const enabled = await requestNotificationPermission();
 
     if (enabled) {
-      alert(
-        "Notifications enabled"
-      );
+      alert("Notifications enabled");
     }
   }
 
-  const customLists =
-    lists.filter(
-      (list) =>
-        !list.is_default
-    );
-
-  const defaultList =
-    lists.find(
-      (list) =>
-        list.is_default
-    );
-
   return (
-    <div
-      className={`sidebar${
-        mobileOpen
-          ? " mobile-open"
-          : ""
-      }`}
+    <aside
+      className={`sidebar${mobileOpen ? " mobile-open" : ""}`}
     >
-
       {/* USER */}
       <div className="side-top">
         <div className="user-chip">
-
           <div className="avatar">
-            {user?.name
-              ?.charAt(0)
-              .toUpperCase()}
+            {user?.name?.charAt(0).toUpperCase()}
           </div>
 
           <div className="user-name">
@@ -132,38 +88,26 @@ export default function Sidebar({
             Sign out
           </button>
 
-          {/* Mobile close button */}
+          {/* Only visible on mobile */}
           <button
             className="mobile-sidebar-close"
-            onClick={
-              onCloseMobile
-            }
-            aria-label="Close menu"
+            onClick={onCloseMobile}
+            aria-label="Close sidebar"
           >
             ✕
           </button>
-
         </div>
       </div>
 
-      {/* NAVIGATION */}
+      {/* MAIN NAVIGATION */}
       <div className="nav">
-
         <button
-          className={`nav-item${
-            view === "myday"
-              ? " active"
-              : ""
-          }`}
-          onClick={() =>
-            changeView("myday")
-          }
+          className={`nav-item${view === "myday" ? " active" : ""}`}
+          onClick={() => handleViewChange("myday")}
         >
-          <span className="ic">
-            ☀
-          </span>
+          <span className="ic">☀</span>
 
-          My Day
+          <span>My Day</span>
 
           <span className="count">
             {counts.myday || ""}
@@ -172,43 +116,28 @@ export default function Sidebar({
 
         <button
           className={`nav-item${
-            view === "important"
-              ? " active"
-              : ""
+            view === "important" ? " active" : ""
           }`}
-          onClick={() =>
-            changeView(
-              "important"
-            )
-          }
+          onClick={() => handleViewChange("important")}
         >
-          <span className="ic">
-            ★
-          </span>
+          <span className="ic">★</span>
 
-          Important
+          <span>Important</span>
 
           <span className="count">
-            {counts.important ||
-              ""}
+            {counts.important || ""}
           </span>
         </button>
 
         <button
           className={`nav-item${
-            view === "planned"
-              ? " active"
-              : ""
+            view === "planned" ? " active" : ""
           }`}
-          onClick={() =>
-            changeView("planned")
-          }
+          onClick={() => handleViewChange("planned")}
         >
-          <span className="ic">
-            📅
-          </span>
+          <span className="ic">📅</span>
 
-          Planned
+          <span>Planned</span>
 
           <span className="count">
             {counts.planned || ""}
@@ -218,31 +147,21 @@ export default function Sidebar({
         {defaultList && (
           <button
             className={`nav-item${
-              view ===
-              defaultList.id
-                ? " active"
-                : ""
+              view === defaultList.id ? " active" : ""
             }`}
-            onClick={() =>
-              changeView(
-                defaultList.id
-              )
-            }
+            onClick={() => handleViewChange(defaultList.id)}
           >
-            <span className="ic">
-              ☰
-            </span>
+            {/* Use a different icon here.
+                ☰ should be reserved for the mobile menu. */}
+            <span className="ic">✓</span>
 
-            Tasks
+            <span>Tasks</span>
 
             <span className="count">
-              {counts.byList[
-                defaultList.id
-              ] || ""}
+              {counts.byList[defaultList.id] || ""}
             </span>
           </button>
         )}
-
       </div>
 
       <div className="side-divider" />
@@ -253,80 +172,55 @@ export default function Sidebar({
       </div>
 
       <div className="lists-wrap">
+        {customLists.map((list) => (
+          <button
+            key={list.id}
+            className={`nav-item${
+              view === list.id ? " active" : ""
+            }`}
+            onClick={() => handleViewChange(list.id)}
+          >
+            <span className="ic">▤</span>
 
-        {customLists.map(
-          (list) => (
-            <button
-              key={list.id}
-              className={`nav-item${
-                view === list.id
-                  ? " active"
-                  : ""
-              }`}
-              onClick={() =>
-                changeView(
-                  list.id
-                )
-              }
-            >
-              <span className="ic">
-                ▤
-              </span>
+            <span>{list.name}</span>
 
-              {list.name}
-
-              <span className="count">
-                {counts.byList[
-                  list.id
-                ] || ""}
-              </span>
-            </button>
-          )
-        )}
-
+            <span className="count">
+              {counts.byList[list.id] || ""}
+            </span>
+          </button>
+        ))}
       </div>
 
-      {/* NEW LIST */}
+      {/* CREATE LIST */}
       {addingList ? (
         <div className="new-list-row">
-
           <input
             autoFocus
             value={newListName}
+            placeholder="List name"
             onChange={(event) =>
-              setNewListName(
-                event.target.value
-              )
+              setNewListName(event.target.value)
             }
-            onKeyDown={(
-              event
-            ) => {
-              if (
-                event.key ===
-                "Enter"
-              ) {
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
                 commitNewList();
               }
-            }}
-            onBlur={
-              commitNewList
-            }
-            placeholder="List name"
-          />
 
+              if (event.key === "Escape") {
+                setAddingList(false);
+                setNewListName("");
+              }
+            }}
+            onBlur={commitNewList}
+          />
         </div>
       ) : (
         <button
           className="add-list-btn"
-          onClick={() =>
-            setAddingList(true)
-          }
+          onClick={() => setAddingList(true)}
         >
-          <span className="ic">
-            ＋
-          </span>
-
-          New list
+          <span className="ic">＋</span>
+          <span>New list</span>
         </button>
       )}
 
@@ -335,17 +229,11 @@ export default function Sidebar({
       {/* NOTIFICATIONS */}
       <button
         className="notification-btn"
-        onClick={
-          enableNotifications
-        }
+        onClick={enableNotifications}
       >
-        <span className="ic">
-          🔔
-        </span>
-
-        Enable Notifications
+        <span className="ic">🔔</span>
+        <span>Enable Notifications</span>
       </button>
-
-    </div>
+    </aside>
   );
 }
