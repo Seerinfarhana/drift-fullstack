@@ -8,6 +8,8 @@ export interface TaskList {
   id: string;
   name: string;
   is_default: boolean;
+  due_date: string | null;
+  reminder: string | null;
 }
 
 export interface Step {

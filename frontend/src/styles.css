@@ -99,3 +99,22 @@ textarea.dnotes{width:100%; min-height:70px; font-size:13px; resize:vertical; ma
 .d-delete{margin-top:20px; color:var(--danger); font-size:13px; padding:9px 8px; display:flex; align-items:center; gap:8px; border-radius:7px; cursor:pointer;}
 .d-delete:hover{background:rgba(255,92,122,.08);}
 .d-meta{font-size:11px; color:var(--faint); margin-top:16px; padding:0 8px;}
+.notification-btn {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 10px 20px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notification-btn:hover {
+  background: var(--surface2);
+  color: var(--text);
+}

@@ -30,15 +30,27 @@ class UserOut(BaseModel):
 
 
 # ---- Lists ----
+
 class ListCreate(BaseModel):
     name: str
+    due_date: Optional[date] = None
+    reminder: Optional[datetime] = None
+
+
+class ListUpdate(BaseModel):
+    name: Optional[str] = None
+    due_date: Optional[date] = None
+    reminder: Optional[datetime] = None
 
 
 class ListOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+
     id: str
     name: str
     is_default: bool
+    due_date: Optional[date]
+    reminder: Optional[datetime]
 
 
 # ---- Steps ----

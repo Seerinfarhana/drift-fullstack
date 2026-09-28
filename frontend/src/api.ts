@@ -59,9 +59,38 @@ export const api = {
   me: () => request<User>("/api/auth/me"),
 
   getLists: () => request<TaskList[]>("/api/lists"),
-  createList: (name: string) =>
-    request<TaskList>("/api/lists", { method: "POST", body: JSON.stringify({ name }) }),
-  deleteList: (id: string) => request<void>(`/api/lists/${id}`, { method: "DELETE" }),
+
+createList: (
+  name: string,
+  due_date?: string | null,
+  reminder?: string | null
+) =>
+  request<TaskList>("/api/lists", {
+    method: "POST",
+    body: JSON.stringify({
+      name,
+      due_date,
+      reminder,
+    }),
+  }),
+
+updateList: (
+  id: string,
+  patch: {
+    name?: string;
+    due_date?: string | null;
+    reminder?: string | null;
+  }
+) =>
+  request<TaskList>(`/api/lists/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(patch),
+  }),
+
+deleteList: (id: string) =>
+  request<void>(`/api/lists/${id}`, {
+    method: "DELETE",
+  }),
 
   getTasks: (params: { view?: string; list_id?: string }) => {
     const qs = new URLSearchParams();

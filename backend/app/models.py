@@ -32,11 +32,19 @@ class TaskList(Base):
     id = Column(String, primary_key=True, default=gen_id)
     name = Column(String, nullable=False)
     is_default = Column(Boolean, default=False)
+
+    due_date = Column(Date, nullable=True)
+    reminder = Column(DateTime(timezone=True), nullable=True)
+
     owner_id = Column(String, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     owner = relationship("User", back_populates="lists")
-    tasks = relationship("Task", back_populates="task_list", cascade="all, delete-orphan")
+    tasks = relationship(
+        "Task",
+        back_populates="task_list",
+        cascade="all, delete-orphan"
+    )
 
 
 class Task(Base):

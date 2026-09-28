@@ -23,10 +23,17 @@ def create_list(
     db: Session = Depends(get_db),
     user: models.User = Depends(get_current_user),
 ):
-    new_list = models.TaskList(name=payload.name, owner_id=user.id)
+    new_list = models.TaskList(
+        name=payload.name,
+        due_date=payload.due_date,
+        reminder=payload.reminder,
+        owner_id=user.id,
+    )
+
     db.add(new_list)
     db.commit()
     db.refresh(new_list)
+
     return new_list
 
 
@@ -47,3 +54,31 @@ def delete_list(
         raise HTTPException(status_code=400, detail="The default list can't be deleted")
     db.delete(target)
     db.commit()
+@router.patch("/{list_id}", response_model=schemas.ListOut)
+def update_list(
+    list_id: str,
+    payload: schemas.ListUpdate,
+    db: Session = Depends(get_db),
+    user: models.User = Depends(get_current_user),
+):
+    target = (
+        db.query(models.TaskList)
+        .filter(
+            models.TaskList.id == list_id,
+            models.TaskList.owner_id == user.id,
+        )
+        .first()
+    )
+
+    if not target:
+        raise HTTPException(status_code=404, detail="List not found")
+
+    data = payload.model_dump(exclude_unset=True)
+
+    for key, value in data.items():
+        setattr(target, key, value)
+
+    db.commit()
+    db.refresh(target)
+
+    return target
