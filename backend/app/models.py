@@ -2,7 +2,8 @@ import uuid
 from datetime import datetime, date
 
 from sqlalchemy import (
-    Column, String, Boolean, ForeignKey, DateTime, Date, Integer, Text
+    Column, String, Boolean, ForeignKey,
+    DateTime, Date, Integer, Text, Time
 )
 from sqlalchemy.orm import relationship
 
@@ -57,6 +58,8 @@ class Task(Base):
     important = Column(Boolean, default=False)
     my_day_date = Column(Date, nullable=True)
     due_date = Column(Date, nullable=True)
+    start_time = Column(Time, nullable=True)
+    end_time = Column(Time, nullable=True)
     reminder = Column(DateTime, nullable=True)
     repeat = Column(String, nullable=True)  # "daily" | "weekly" | "monthly" | None
     order = Column(Integer, default=0)

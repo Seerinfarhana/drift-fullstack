@@ -54,6 +54,7 @@ def delete_list(
         raise HTTPException(status_code=400, detail="The default list can't be deleted")
     db.delete(target)
     db.commit()
+    
 @router.patch("/{list_id}", response_model=schemas.ListOut)
 def update_list(
     list_id: str,

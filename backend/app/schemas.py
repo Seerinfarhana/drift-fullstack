@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, time
 from typing import Optional, Literal
 
 from pydantic import BaseModel, EmailStr, ConfigDict
@@ -84,6 +84,8 @@ class TaskUpdate(BaseModel):
     important: Optional[bool] = None
     my_day: Optional[bool] = None  # true -> set to today, false -> clear
     due_date: Optional[date] = None
+    start_time: Optional[time] = None
+    end_time: Optional[time] = None
     reminder: Optional[datetime] = None
     repeat: Optional[Literal["daily", "weekly", "monthly", ""]] = None
     list_id: Optional[str] = None
@@ -98,6 +100,8 @@ class TaskOut(BaseModel):
     important: bool
     my_day_date: Optional[date]
     due_date: Optional[date]
+    start_time: Optional[time]
+    end_time: Optional[time]
     reminder: Optional[datetime]
     repeat: Optional[str]
     list_id: str

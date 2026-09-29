@@ -27,6 +27,8 @@ export interface Task {
   important: boolean;
   my_day_date: string | null;
   due_date: string | null;
+  start_time: string | null;
+  end_time: string | null;
   reminder: string | null;
   repeat: "daily" | "weekly" | "monthly" | null;
   list_id: string;
